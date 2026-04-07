@@ -123,6 +123,7 @@ class App extends React.Component {
                   onDelete={this.onDeleteHandler}
                   onArchive={this.onArchiveHandler}
                   dataTestId="active-notes-list"
+                  searchKeyword={searchKeyword}
                 />
               </section>
 
@@ -140,6 +141,7 @@ class App extends React.Component {
                   onDelete={this.onDeleteHandler}
                   onArchive={this.onArchiveHandler}
                   dataTestId="archived-notes-list"
+                  searchKeyword={searchKeyword}
                 />
               </section>
             </div>

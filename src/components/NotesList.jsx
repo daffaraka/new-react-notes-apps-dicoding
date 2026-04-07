@@ -1,7 +1,7 @@
 import React from 'react';
 import NoteItem from './NoteItem';
 
-function NotesList({ notes, onDelete, onArchive, dataTestId = 'notes-list' }) {
+function NotesList({ notes, onDelete, onArchive, dataTestId = 'notes-list', searchKeyword = '' }) {
   const hasNotes = Array.isArray(notes) && notes.length > 0;
 
   if (!hasNotes) {
@@ -23,11 +23,18 @@ function NotesList({ notes, onDelete, onArchive, dataTestId = 'notes-list' }) {
   }
 
   const groups = notes.reduce((acc, note) => {
-    const key = new Date(note.createdAt).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+    const d = new Date(note.createdAt);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     if (!acc[key]) acc[key] = [];
     acc[key].push(note);
     return acc;
   }, {});
+
+  const formatGroupHeader = (key) => {
+    const [year, month] = key.split('-');
+    const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    return `${months[parseInt(month, 10) - 1]} ${year}`;
+  };
 
   return (
     <div className="notes-list space-y-6" data-testid={dataTestId}>
@@ -35,7 +42,7 @@ function NotesList({ notes, onDelete, onArchive, dataTestId = 'notes-list' }) {
         <section key={groupKey} data-testid={`${groupKey}-group`} className="notes-group">
           <div className="flex items-center gap-3 mb-3">
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest whitespace-nowrap">
-              {groupKey}
+              {formatGroupHeader(groupKey)}
             </span>
             <span data-testid={`${groupKey}-group-count`} className="text-xs text-slate-400">
               {groupNotes.length} catatan
@@ -44,7 +51,13 @@ function NotesList({ notes, onDelete, onArchive, dataTestId = 'notes-list' }) {
           </div>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {groupNotes.map((note) => (
-              <NoteItem key={note.id} note={note} onDelete={onDelete} onArchive={onArchive} />
+              <NoteItem
+                key={note.id}
+                note={note}
+                onDelete={onDelete}
+                onArchive={onArchive}
+                searchKeyword={searchKeyword}
+              />
             ))}
           </div>
         </section>
