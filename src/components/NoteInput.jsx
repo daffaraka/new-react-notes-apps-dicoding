@@ -7,7 +7,6 @@ class NoteInput extends React.Component {
     this.state = {
       title: '',
       body: '',
-      error: '',
     };
 
     this.onTitleChangeEventHandler = this.onTitleChangeEventHandler.bind(this);
@@ -20,21 +19,18 @@ class NoteInput extends React.Component {
   }
 
   onBodyChangeEventHandler(event) {
-    this.setState({ body: event.target.value, error: '' });
+    this.setState({ body: event.target.value });
   }
 
   onSubmitEventHandler(event) {
     event.preventDefault();
-    if (this.state.body.length < 10) {
-      this.setState({ error: 'Isi catatan minimal 10 karakter.' });
-      return;
-    }
+    if (this.state.body.length < 10) return;
     this.props.addNote({ title: this.state.title, body: this.state.body });
-    this.setState({ title: '', body: '', error: '' });
+    this.setState({ title: '', body: '' });
   }
 
   render() {
-    const { title, body, error } = this.state;
+    const { title, body } = this.state;
     const remainingChars = 50 - title.length;
     const isNearLimit = remainingChars < 10;
 
@@ -58,24 +54,15 @@ class NoteInput extends React.Component {
         {/* Form */}
         <form onSubmit={this.onSubmitEventHandler} className="p-5 space-y-4" data-testid="note-input-form">
 
-          {error && (
-            <div className="note-input__feedback--error flex items-start gap-2 bg-red-50 border border-red-200 text-red-600 text-xs rounded-lg px-3 py-2.5" data-testid="note-input-error">
-              <svg className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-              {error}
-            </div>
-          )}
-
           {/* Title field */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Judul</label>
               <span
-                className={`text-xs font-medium tabular-nums ${isNearLimit ? 'text-red-500' : 'text-slate-400'}`}
                 data-testid="note-input-title-remaining"
+                className={`note-input__title__char-limit text-xs font-medium tabular-nums ${isNearLimit ? 'text-red-500' : 'text-slate-400'}`}
               >
-                {remainingChars}/50
+                {remainingChars} karakter tersisa
               </span>
             </div>
             <input
@@ -87,9 +74,6 @@ class NoteInput extends React.Component {
               required
               data-testid="note-input-title-field"
             />
-            {isNearLimit && (
-              <p className="text-xs text-red-400">Hampir mencapai batas karakter.</p>
-            )}
           </div>
 
           {/* Body field */}
@@ -103,6 +87,11 @@ class NoteInput extends React.Component {
               required
               data-testid="note-input-body-field"
             />
+            {body.length < 10 && body.length > 0 && (
+              <p className="note-input__feedback--error text-xs text-red-500">
+                Isi catatan minimal harus 10 karakter
+              </p>
+            )}
           </div>
 
           <button
