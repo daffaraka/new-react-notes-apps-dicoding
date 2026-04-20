@@ -1,10 +1,11 @@
-import React from 'react';
 import { showFormattedDate } from '../utils';
+import { useNavigate } from 'react-router-dom';
 import NoteActionButton from './NoteActionButton';
 
 function highlightText(text, keyword) {
   if (!keyword || !keyword.trim()) return text;
-  const regex = new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${escaped})`, 'gi');
   const parts = text.split(regex);
   return parts.map((part, i) =>
     regex.test(part) ? <mark key={i} className="bg-yellow-200 text-yellow-900 rounded px-0.5">{part}</mark> : part
@@ -12,6 +13,8 @@ function highlightText(text, keyword) {
 }
 
 function NoteItem({ note, onDelete, onArchive, searchKeyword = '' }) {
+  const navigate = useNavigate();
+
   return (
     <div
       className={`group relative bg-white rounded-2xl border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 flex flex-col ${
@@ -20,7 +23,6 @@ function NoteItem({ note, onDelete, onArchive, searchKeyword = '' }) {
       data-testid="note-item"
       data-note-id={note?.id}
     >
-      {/* Accent bar */}
       <div className={`h-1 w-full rounded-t-2xl ${note.archived ? 'bg-slate-300' : 'bg-gradient-to-r from-blue-500 to-indigo-500'}`} />
 
       <div className="p-4 flex flex-col gap-3 flex-1">
@@ -33,7 +35,7 @@ function NoteItem({ note, onDelete, onArchive, searchKeyword = '' }) {
               {highlightText(note.title, searchKeyword)}
             </h3>
             {note.archived && (
-              <span className="flex-shrink-0 text-xs bg-slate-100 text-slate-500 font-medium px-2 py-0.5 rounded-full">
+              <span className="shrink-0 text-xs bg-slate-100 text-slate-500 font-medium px-2 py-0.5 rounded-full">
                 Arsip
               </span>
             )}
@@ -53,6 +55,11 @@ function NoteItem({ note, onDelete, onArchive, searchKeyword = '' }) {
           className="note-item__action flex items-center justify-end gap-1 pt-2 border-t border-slate-100"
           data-testid="note-item-action"
         >
+          <NoteActionButton
+            variant="detail"
+            onClick={() => navigate(`/notes/${note.id}`)}
+            dataTestId="note-item-detail-button"
+          />
           <NoteActionButton
             variant="delete"
             onClick={() => onDelete(note.id)}
