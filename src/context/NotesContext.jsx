@@ -1,10 +1,10 @@
-import React, { createContext, useContext, useState } from 'react';
-import { getInitialData } from '../utils';
+import { createContext, useContext, useState } from 'react';
+import { getAllNotes } from '../utils/local-data';
 
 const NotesContext = createContext();
 
 export function NotesProvider({ children }) {
-  const [notes, setNotes] = useState(getInitialData());
+  const [notes, setNotes] = useState(getAllNotes());
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedNote, setSelectedNote] = useState(null)
 
@@ -32,7 +32,7 @@ export function NotesProvider({ children }) {
   function onAdd({ title, body }) {
     setNotes((prev) => [
       ...prev,
-      { id: +new Date(), title, body, createdAt: new Date().toISOString(), archived: false },
+      { id: `notes-${+new Date()}`, title, body, createdAt: new Date().toISOString(), archived: false },
     ]);
   }
 
