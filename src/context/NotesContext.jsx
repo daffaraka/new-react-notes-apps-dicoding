@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { getActiveNotes, getArchivedNotes } from '../utils/notes_api.js';
+import { getActiveNotes, getArchivedNotes, addNote, deleteNote, archiveNote, unarchiveNote } from '../utils/notes_api.js';
 const NotesContext = createContext();
 
 export function NotesProvider({ children }) {
@@ -41,19 +41,20 @@ export function NotesProvider({ children }) {
   const onCloseDetail = () => setSelectedNote(null)
 
 
-  function onAdd({ title, body }) {
-    setNotes((prev) => [
-      ...prev,
-      { id: `notes-${+new Date()}`, title, body, createdAt: new Date().toISOString(), archived: false },
-    ]);
+  async function onAdd({ title, body }) {
+    const { error, data } = await addNote({ title, body });
+    if (!error) setNotes((prev) => [data, ...prev]);
   }
 
-  function onDelete(id) {
-    setNotes((prev) => prev.filter((n) => n.id !== id));
+  async function onDelete(id) {
+    const { error } = await deleteNote(id);
+    if (!error) setNotes((prev) => prev.filter((n) => n.id !== id));
   }
 
-  function onArchive(id) {
-    setNotes((prev) => prev.map((n) => (n.id === id ? { ...n, archived: !n.archived } : n)));
+  async function onArchive(id) {
+    const note = notes.find((n) => n.id === id);
+    const { error } = note.archived ? await unarchiveNote(id) : await archiveNote(id);
+    if (!error) setNotes((prev) => prev.map((n) => (n.id === id ? { ...n, archived: !n.archived } : n)));
   }
 
   return (

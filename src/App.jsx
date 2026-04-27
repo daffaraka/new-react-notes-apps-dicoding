@@ -11,6 +11,8 @@ import RegisterPage from './pages/RegisterPage';
 import { putAccessToken, getUserLogged } from './utils/notes_api';
 import { ThemeProvider } from './context/ThemesContext';
 
+import NewNotePage from './pages/NewNotePage';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -89,6 +91,7 @@ class App extends React.Component {
             <main>
               <Routes>
                 <Route path="/" element={<Homepage />} />
+                <Route path="/notes/new" element={<NewNotePage />} />
                 <Route path="/archive" element={<Archive />} />
                 <Route path="/notes/:id" element={<NoteDetail />} />
                 <Route path="*" element={<NotFound />} />

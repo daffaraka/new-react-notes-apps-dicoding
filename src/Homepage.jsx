@@ -1,8 +1,8 @@
 import React from 'react';
 import { withNotes } from './context/NotesContext';
 import { ThemeConsumer } from './context/ThemesContext';
+import { Link } from 'react-router-dom';
 import NotesList from './components/NotesList';
-import NoteInput from './components/NoteInput';
 import NotesDetailModal from './components/NotesDetailModal';
 
 class Homepage extends React.Component {
@@ -19,12 +19,23 @@ class Homepage extends React.Component {
             <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8" data-testid="note-app-body">
               <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
 
-                <aside className="w-full lg:w-80 lg:sticky lg:top-24 shrink-0">
+                {/* <aside className="w-full lg:w-80 lg:sticky lg:top-24 shrink-0">
                   <NoteInput addNote={onAdd} />
-                </aside>
+                </aside> */}
 
                 <div className="flex-1 min-w-0 space-y-8">
-                  <section aria-labelledby="active-notes-title" data-testid="active-notes-section">
+                  {/* Tombol ke halaman /notes/new */}
+                <Link
+                  to="/notes/new"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 mb-6 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Catatan Baru
+                </Link>
+
+                <section aria-labelledby="active-notes-title" data-testid="active-notes-section">
                     <div className="flex items-center gap-2 mb-4">
                       <h2 id="active-notes-title" className={`text-base font-bold ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>
                         Catatan Aktif
