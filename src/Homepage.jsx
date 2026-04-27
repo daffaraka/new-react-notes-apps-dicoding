@@ -3,11 +3,10 @@ import { withNotes } from './context/NotesContext';
 import { ThemeConsumer } from './context/ThemesContext';
 import { Link } from 'react-router-dom';
 import NotesList from './components/NotesList';
-import NotesDetailModal from './components/NotesDetailModal';
 
 class Homepage extends React.Component {
   render() {
-    const { activeNotes, archivedNotes, searchKeyword, onAdd, onDelete, onArchive, onOpenDetail, onCloseDetail, selectedNote } = this.props.notes;
+    const { activeNotes, archivedNotes, searchKeyword, onDelete, onArchive } = this.props.notes;
 
     return (
       <ThemeConsumer>
@@ -17,17 +16,11 @@ class Homepage extends React.Component {
             data-testid="note-app"
           >
             <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8" data-testid="note-app-body">
-              <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
+              <div className="flex-1 min-w-0 space-y-8">
 
-                {/* <aside className="w-full lg:w-80 lg:sticky lg:top-24 shrink-0">
-                  <NoteInput addNote={onAdd} />
-                </aside> */}
-
-                <div className="flex-1 min-w-0 space-y-8">
-                  {/* Tombol ke halaman /notes/new */}
                 <Link
                   to="/notes/new"
-                  className="flex items-center justify-center gap-2 w-full py-2.5 mb-6 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
@@ -36,52 +29,47 @@ class Homepage extends React.Component {
                 </Link>
 
                 <section aria-labelledby="active-notes-title" data-testid="active-notes-section">
-                    <div className="flex items-center gap-2 mb-4">
-                      <h2 id="active-notes-title" className={`text-base font-bold ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>
-                        Catatan Aktif
-                      </h2>
-                      <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-0.5 rounded-full">
-                        {activeNotes.length}
-                      </span>
+                  <div className="flex items-center gap-2 mb-4">
+                    <h2 id="active-notes-title" className={`text-base font-bold ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>
+                      Catatan Aktif
+                    </h2>
+                    <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                      {activeNotes.length}
+                    </span>
+                  </div>
+
+                  {activeNotes.length === 0 ? (
+                    <div className={`rounded-xl shadow-sm border p-6 text-center ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-slate-100'}`}>
+                      <p className={theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}>Tidak ada catatan aktif</p>
                     </div>
+                  ) : (
+                    <NotesList notes={activeNotes} onDelete={onDelete} onArchive={onArchive} dataTestId="active-notes-list" searchKeyword={searchKeyword} />
+                  )}
+                </section>
 
-                    {activeNotes.length === 0 ? (
-                      <div className={`rounded-xl shadow-sm border p-6 text-center ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-slate-100'}`}>
-                        <p className={theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}>Tidak ada catatan aktif</p>
-                      </div>
-                    ) : (
-                      <NotesList notes={activeNotes} onDetail={onOpenDetail} onDelete={onDelete} onArchive={onArchive} dataTestId="active-notes-list" searchKeyword={searchKeyword} />
-                    )}
-                  </section>
+                <section aria-labelledby="archived-notes-title" data-testid="archived-notes-section">
+                  <div className="flex items-center gap-2 mb-4">
+                    <h2 id="archived-notes-title" className={`text-base font-bold ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>
+                      Arsip
+                    </h2>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${theme === 'dark' ? 'bg-gray-700 text-slate-300' : 'bg-slate-200 text-slate-600'}`}>
+                      {archivedNotes.length}
+                    </span>
+                  </div>
 
-                  <section aria-labelledby="archived-notes-title" data-testid="archived-notes-section">
-                    <div className="flex items-center gap-2 mb-4">
-                      <h2 id="archived-notes-title" className={`text-base font-bold ${theme === 'dark' ? 'text-slate-200' : 'text-slate-700'}`}>
-                        Arsip
-                      </h2>
-                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${theme === 'dark' ? 'bg-gray-700 text-slate-300' : 'bg-slate-200 text-slate-600'}`}>
-                        {archivedNotes.length}
-                      </span>
+                  {archivedNotes.length === 0 ? (
+                    <div className={`rounded-xl shadow-sm border p-6 text-center ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-slate-100'}`}>
+                      <p className={theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}>Tidak ada catatan di arsip</p>
                     </div>
-
-                    {archivedNotes.length === 0 ? (
-                      <div className={`rounded-xl shadow-sm border p-6 text-center ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-slate-100'}`}>
-                        <p className={theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}>Tidak ada catatan di arsip</p>
-                      </div>
-                    ) : (
-                      <div className={`rounded-xl p-4 shadow-sm border ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-slate-100 border-slate-200'}`}>
-                        <NotesList notes={archivedNotes} onDetail={onOpenDetail} onDelete={onDelete} onArchive={onArchive} dataTestId="archived-notes-list" searchKeyword={searchKeyword} />
-                      </div>
-                    )}
-                  </section>
-                </div>
+                  ) : (
+                    <div className={`rounded-xl p-4 shadow-sm border ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-slate-100 border-slate-200'}`}>
+                      <NotesList notes={archivedNotes} onDelete={onDelete} onArchive={onArchive} dataTestId="archived-notes-list" searchKeyword={searchKeyword} />
+                    </div>
+                  )}
+                </section>
 
               </div>
             </main>
-
-            {selectedNote && (
-              <NotesDetailModal note={selectedNote} onClose={onCloseDetail} />
-            )}
           </div>
         )}
       </ThemeConsumer>
