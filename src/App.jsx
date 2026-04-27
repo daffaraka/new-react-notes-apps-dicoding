@@ -85,7 +85,7 @@ class App extends React.Component {
       return (
         <ThemeProvider value={{ theme, toggleTheme }}>
           <NotesProvider>
-            <Navigation onLogout={this.onLogout} />
+            <Navigation onLogout={this.onLogout} authedUser={authedUser} />
             <main>
               <Routes>
                 <Route path="/" element={<Homepage />} />

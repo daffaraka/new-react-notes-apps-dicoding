@@ -4,7 +4,7 @@ import { useNotes } from '../context/NotesContext';
 import { ThemeConsumer } from '../context/ThemesContext';
 import ToggleTheme from './ToggleTheme';
 
-function Navigation({ onLogout }) {
+function Navigation({ onLogout, authedUser }) {
   const { activeNotes, archivedNotes, searchKeyword, setSearchKeyword } = useNotes();
 
   return (
@@ -17,14 +17,21 @@ function Navigation({ onLogout }) {
           {/* Row 1: logo | links | logout */}
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
 
-            {/* Kiri: My Notes */}
-            <div className="flex items-center gap-2.5 flex-shrink-0">
+            {/* Kiri: My Notes + user info */}
+            <div className="flex items-center gap-3 flex-shrink-0">
               <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
               </div>
-              <h1 className={`text-lg font-bold tracking-tight ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>My Notes</h1>
+              <div>
+                <h1 className={`text-lg font-bold tracking-tight leading-none ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>My Notes</h1>
+                {authedUser && (
+                  <p className={`text-xs mt-0.5 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                    👤 {authedUser.name} · {authedUser.email}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Tengah: Aktif & Arsip */}
