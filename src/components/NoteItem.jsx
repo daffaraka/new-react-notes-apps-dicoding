@@ -17,7 +17,7 @@ function NoteItem({ note, onDelete, onArchive, searchKeyword = '' }) {
 
   return (
     <div
-      className={`group relative bg-white rounded-2xl border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 flex flex-col ${
+      className={`group relative bg-white rounded border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 flex flex-col ${
         note.archived ? 'border-slate-200 opacity-75' : 'border-slate-200 hover:border-blue-200'
       }`}
       data-testid="note-item"
